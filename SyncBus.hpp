@@ -12,11 +12,11 @@
 #include <cstddef>
 #include <cstring>
 
-#ifndef PROTO_BUS_BUFFER_SIZE
-#define PROTO_BUS_BUFFER_SIZE 64U
+#ifndef SYNCBUS_BUFFER_SIZE
+#define SYNCBUS_BUFFER_SIZE 64U
 #endif
 
-#ifndef SyncBus_ENABLE_SET_ACK
+#ifndef SYNCBUS_ENABLE_SET_ACK
 #define SyncBus_ENABLE_SET_ACK 1
 #endif
 
@@ -173,7 +173,7 @@ public:
     }
 
     // total = header + crc
-    if ((static_cast<uint16_t>(HeaderSize) + 2U) > PROTO_BUS_BUFFER_SIZE)
+    if ((static_cast<uint16_t>(HeaderSize) + 2U) > SYNCBUS_BUFFER_SIZE)
     {
       return result::errOverflow;
     }
@@ -206,7 +206,7 @@ public:
     const uint16_t totalNoCrc = static_cast<uint16_t>(HeaderSize)
         + static_cast<uint16_t>(payload);
 
-    if (totalNoCrc + 2U > PROTO_BUS_BUFFER_SIZE)
+    if (totalNoCrc + 2U > SYNCBUS_BUFFER_SIZE)
     {
       return result::errOverflow;
     }
@@ -287,7 +287,7 @@ public:
     }
 
     // enforce maximum payload per frame
-    if ((static_cast<uint16_t>(HeaderSize) + size + 2U) > PROTO_BUS_BUFFER_SIZE)
+    if ((static_cast<uint16_t>(HeaderSize) + size + 2U) > SYNCBUS_BUFFER_SIZE)
     {
       return result::errOverflow;
     }
@@ -306,7 +306,7 @@ private:
   serverData_t m_serveSlots[numSlots];
   SyncBusSendData_cb m_sendData_cb;
   SyncBusDataChanged_cb m_dataChanged_cb;
-  uint8_t m_buffer[PROTO_BUS_BUFFER_SIZE];
+  uint8_t m_buffer[SYNCBUS_BUFFER_SIZE];
 };
 
 // ============================================================================
@@ -367,7 +367,7 @@ public:
           const uint16_t totalNoCrc = static_cast<uint16_t>(HeaderSize)
               + payload;
 
-          if (totalNoCrc + 2U > PROTO_BUS_BUFFER_SIZE)
+          if (totalNoCrc + 2U > SYNCBUS_BUFFER_SIZE)
           {
             return result::errOverflow;
           }
@@ -404,9 +404,9 @@ public:
             m_dataChanged_cb(slotId);
           }
 
-#if SyncBus_ENABLE_SET_ACK
+#if SYNCBUS_ENABLE_SET_ACK
           // Send SetResp ACK (no payload)
-          if ((static_cast<uint16_t>(HeaderSize) + 2U) > PROTO_BUS_BUFFER_SIZE)
+          if ((static_cast<uint16_t>(HeaderSize) + 2U) > SYNCBUS_BUFFER_SIZE)
           {
             return result::errOverflow;
           }
@@ -441,7 +441,7 @@ public:
     }
 
     // enforce maximum payload per frame for GET response
-    if ((static_cast<uint16_t>(HeaderSize) + size + 2U) > PROTO_BUS_BUFFER_SIZE)
+    if ((static_cast<uint16_t>(HeaderSize) + size + 2U) > SYNCBUS_BUFFER_SIZE)
     {
       return result::errOverflow;
     }
@@ -460,7 +460,7 @@ private:
   clientSlot_t m_clientSlots[numSlots];
   SyncBusSendData_cb m_sendData_cb;
   SyncBusDataChanged_cb m_dataChanged_cb;
-  uint8_t m_buffer[PROTO_BUS_BUFFER_SIZE];
+  uint8_t m_buffer[SYNCBUS_BUFFER_SIZE];
 };
 
 } // namespace SyncBus
